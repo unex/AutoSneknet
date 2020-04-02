@@ -126,6 +126,3 @@ while True:
         print(style.RESET)
 
     print('')
-
-    # You might need this but I dont
-    # time.sleep(.1)
