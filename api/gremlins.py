@@ -1,4 +1,5 @@
 from requests import Session
+from ratelimit import limits, sleep_and_retry
 
 import logging
 
@@ -11,6 +12,8 @@ class GremlinsAPI(Session):
         self.API_BASE = "https://gremlins-api.reddit.com"
         self.cookies.set("reddit_session", api_key)
 
+    @sleep_and_retry
+    @limits(calls=2, period=1) # 2 calls / second
     def request(self, method, url, **kwargs):
         r = super().request(method, f'{self.API_BASE}{url}', **kwargs)
 
