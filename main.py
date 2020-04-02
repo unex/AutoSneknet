@@ -37,37 +37,25 @@ while True:
 
     notes = {ids[i]: notes_content[i] for i in range(len(ids))}
 
-    imposter = None
-
-    # Query Sneknet for known, and remove know humans from the notes
+    # Query Sneknet for known, and remove known humans from the notes
     known = sneknet.query(notes_content)
-    for i, corr in known.items():
-        if corr:
-            imposter = i
-            break
+    if True in known.values():
+        print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
+        # Sneknet doesnt return a full dict and it FUCKS my shit
+        vals = [known.get(k, False) for k in range(5)]
+        _id = ids[vals.index(True)]
 
         else:
-            to_del = []
-            for _id, cont in notes.items():
-                if cont == notes_content[i]:
-                    to_del.append(_id)
+        for i, v in known.items():
+            del notes[ids[i]]
 
-            for _id in to_del:
-                del notes[_id]
-                ids.remove(_id)
-
-
-    if not notes:
-        # This is very odd, not sure how to handle this
-        continue
-
-    if imposter or len(notes) == 1:
+        if len(notes) == 1:
         print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
-        _id = ids[imposter] if imposter else ids[0]
+            _id = list(notes.keys())[0]
 
     else:
         print(f'[{fore.YELLOW} RANDOM {style.RESET}][{len(notes)}]', end='')
-        _id = random.choice(ids)
+            _id = random.choice(list(notes.keys()))
 
     is_correct = gremlins.submit_guess(_id, csrf)
 
@@ -103,10 +91,10 @@ while True:
     else:
         print(f'[{fore.MAGENTA} UNSEEN {style.RESET}]', end='')
 
-    if (imposter and not is_correct) or len(notes) == 0:
+    if (True in known.values() and not is_correct):
         print(back.RED + fore.BLACK)
         print(f'\n\nOOH SHIT THIS SHOULD NEVER HAPPEN\n\n')
-        print(f'{notes=}, {imposter=}')
+        print(f'{notes=}')
         print('\n')
         print(f'{notes[_id]} WAS WRONG!!!!')
         print(style.RESET + '\n\n')
