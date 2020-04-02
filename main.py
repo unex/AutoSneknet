@@ -133,11 +133,7 @@ while True:
         print(f'[{fore.MAGENTA} UNSEEN {style.RESET}]', end='')
 
     if (True in known.values() and not is_correct):
-        print(back.RED + fore.BLACK)
-        print(f'\n\nOOH SHIT THIS SHOULD NEVER HAPPEN\n\n')
-        print(f'{notes_content=} {known=}')
-        print('\n')
-        print(f'{notes[_id]} WAS WRONG!!!!')
-        print(style.RESET)
+        print(f'[{back.RED}{fore.WHITE} WRONG {style.RESET}]', end='')
+        log.warning(f'IMPOSTER MISMATCH: "{notes[_id]}" {text=} {_id=} {known=} {notes=}')
 
     print('')
