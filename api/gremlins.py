@@ -30,4 +30,10 @@ class GremlinsAPI(Session):
             "csrf_token": csrf
         })
 
+        try:
+            r.json()
+        except:
+            text = r.text.replace('\n', '')
+            log.critical(f'[{self.__class__.__module__}.{self.__class__.__name__}] <{r.status_code}> submit_guess {text}')
+
         return r.json()["result"] == "WIN"
