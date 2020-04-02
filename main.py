@@ -63,28 +63,52 @@ while True:
             _id = random.choice(list(notes.keys()))
             log.debug(f'Picking random from {len(notes)} options, {_id=}, {notes=}, "{notes[_id]}"')
 
+    text = notes[_id]
+
     print(f'[ {text:110} ]', end='')
+
     is_correct = gremlins.submit_guess(_id, csrf)
 
     log.debug(f'{is_correct=}')
 
-    options = [
-        {
-            "message": text,
-            "correct": True
-        },
-        *[{
-            "message": content,
-            "correct": False
-        } for i, content in notes.items() if i != _id]
-    ] if is_correct else [
-        {
-            "message": text,
-            "correct": False
-        }
-    ]
+    if is_correct:
+        print(f'[{fore.LIGHT_GREEN} W {style.RESET}]', end='')
+    else:
+        print(f'[{fore.RED} L {style.RESET}]', end='')
 
-    print(f'[ {text:110} ]', end='')
+
+    if len(notes) == 2:
+        log.debug(f'50% chance "{notes[_id]}" {is_correct=}')
+        del notes[_id] # delete the one we know
+        options = [
+            {
+                "message": text,
+                "correct": is_correct
+            },
+            {
+                "message": notes[list(notes.keys())[0]],
+                "correct": not is_correct
+            }
+        ]
+
+    else:
+        options = [
+            {
+                "message": text,
+                "correct": True
+            },
+            *[{
+                "message": content,
+                "correct": False
+            } for i, content in notes.items() if i != _id]
+        ] if is_correct else [
+            {
+                "message": text,
+                "correct": False
+            }
+        ]
+
+    seen = sneknet.submit(options)
 
     log.debug(f'{seen=}')
 
