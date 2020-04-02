@@ -36,9 +36,12 @@ while True:
 
     plswait = re_plswait.findall(room.text)
     if plswait:
-        print(f'{plswait[0]}')
-        time.sleep(10)
+        for i in range(5):
+            print(f'{back.WHITE}{fore.BLACK}{plswait[0]}' + ('' if i % 2 == 0 else back.BLACK) + ' ' + style.RESET, end='\r')
+            time.sleep(1)
         continue
+
+    print('', end='')
 
     csrf = re_csrf.findall(room.text)[0]
     ids = re_notes_ids.findall(room.text)
