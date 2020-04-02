@@ -37,6 +37,9 @@ def longest_id(notes):
     print(f'[{fore.YELLOW} LONGEST {style.RESET}][{len(notes)}]', end='')
     return _id
 
+win: int = 1
+lose: int = 1
+
 while True:
     log.debug('='*50)
     room = gremlins.room()
@@ -93,8 +96,10 @@ while True:
 
     if is_correct:
         print(f'[{fore.LIGHT_GREEN} W {style.RESET}]', end='')
+        win += 1
     else:
         print(f'[{fore.RED} L {style.RESET}]', end='')
+        lose += 1
 
 
     if len(notes) == 2:
@@ -136,6 +141,8 @@ while True:
         print(f'[{fore.CYAN}  SEEN  {style.RESET}]', end='')
     else:
         print(f'[{fore.MAGENTA} UNSEEN {style.RESET}]', end='')
+
+    print(f'[{(win/(win+lose))*100:.1f}%]', end='')
 
     if (True in known.values() and not is_correct):
         print(f'[{back.RED}{fore.WHITE} WRONG {style.RESET}]', end='')
