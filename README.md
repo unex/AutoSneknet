@@ -10,3 +10,9 @@ Move `.env.example` to `.env` and put your shit in there
 pipenv install
 pipenv run python main.py
 ```
+
+"Set-it-and-forget-it" example
+
+```bash
+while true; git pull; do pipenv run python main.py; sleep 10; done
+```
