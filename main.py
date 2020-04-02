@@ -9,6 +9,11 @@ from colored import fore, back, style
 from api import GremlinsAPI, Sneknet
 from logger import log
 
+try:
+    from gpt2 import Roberta
+except:
+    Roberta = False
+
 REDDIT_TOKEN = os.environ.get("REDDIT_TOKEN", None)
 if not REDDIT_TOKEN:
     print(back.RED + fore.BLACK)
@@ -30,11 +35,28 @@ print(fore.GREEN_YELLOW)
 print('🐍  https://snakeroom.org/sneknet 🐍')
 print(style.RESET)
 
-def longest_id(notes):
-    longest = max(notes.values(), key=len)
-    _id = list(notes.keys())[list(notes.values()).index(longest)]
-    log.debug(f'Selected longest {longest}, {_id=} from {notes.values()=}')
-    print(f'[{fore.YELLOW} LONGEST {style.RESET}][{len(notes)}]', end='')
+roberta = None
+if Roberta is not None:
+    print("Initalizing GPT-2...", end='\r')
+    roberta = Roberta()
+    print('GPT-2 Model Initialzed')
+
+
+def cool_algo_name(notes):
+    if roberta:
+        datas = {k: roberta.query(v)[0] for k, v in notes.items()}
+        val = max(datas.values())
+        _id = list(datas.keys())[list(datas.values()).index(val)]
+        print(f'[{fore.ORANGE_1} GPT {(val)*100:.0f}% {style.RESET}][{len(notes)}]', end='')
+        log.debug(f'GPT2 {val} "{notes[_id]}" {datas=} {notes=}')
+        return _id
+
+    else:
+        longest = max(notes.values(), key=len)
+        _id = list(notes.keys())[list(notes.values()).index(longest)]
+        log.debug(f'Selected longest {longest}, {_id=} from {notes.values()=}')
+        print(f'[{fore.YELLOW} LONGEST {style.RESET}][{len(notes)}]', end='')
+
     return _id
 
 win: int = 1
@@ -71,7 +93,7 @@ while True:
     else:
         if len(known) == 5:
             log.error(f'Zero length notes?!?!?! {notes=} {known=}')
-            _id = longest_id(notes)
+            _id = cool_algo_name(notes)
 
         else:
             for i, v in known.items():
@@ -84,7 +106,7 @@ while True:
                 log.debug(f'Confirmed imposter from last note {_id=} "{notes[_id]}"')
 
             else:
-                _id = longest_id(notes)
+                _id = cool_algo_name(notes)
 
     text = notes[_id]
 
