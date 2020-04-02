@@ -45,16 +45,16 @@ while True:
         vals = [known.get(k, False) for k in range(5)]
         _id = ids[vals.index(True)]
 
-        else:
+    else:
         for i, v in known.items():
             del notes[ids[i]]
 
         if len(notes) == 1:
-        print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
+            print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
             _id = list(notes.keys())[0]
 
-    else:
-        print(f'[{fore.YELLOW} RANDOM {style.RESET}][{len(notes)}]', end='')
+        else:
+            print(f'[{fore.YELLOW} RANDOM {style.RESET}][{len(notes)}]', end='')
             _id = random.choice(list(notes.keys()))
 
     is_correct = gremlins.submit_guess(_id, csrf)
@@ -101,4 +101,5 @@ while True:
 
     print('')
 
-    time.sleep(.3)
+    # You might need this but I dont
+    # time.sleep(.1)
