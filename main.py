@@ -12,7 +12,7 @@ from logger import log
 try:
     from gpt2 import Roberta
 except:
-    Roberta = False
+    Roberta = None
 
 REDDIT_TOKEN = os.environ.get("REDDIT_TOKEN", None)
 if not REDDIT_TOKEN:
