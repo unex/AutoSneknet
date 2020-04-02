@@ -57,6 +57,7 @@ while True:
             print(f'[{fore.YELLOW} RANDOM {style.RESET}][{len(notes)}]', end='')
             _id = random.choice(list(notes.keys()))
 
+    print(f'[ {text:110} ]', end='')
     is_correct = gremlins.submit_guess(_id, csrf)
 
     text = notes[_id]
