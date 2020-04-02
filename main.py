@@ -30,6 +30,13 @@ print(fore.GREEN_YELLOW)
 print('🐍  https://snakeroom.org/sneknet 🐍')
 print(style.RESET)
 
+def longest_id(notes):
+    longest = max(notes.values(), key=len)
+    _id = list(notes.keys())[list(notes.values()).index(longest)]
+    log.debug(f'Selected longest {longest}, {_id=} from {notes.values()=}')
+    print(f'[{fore.YELLOW} LONGEST {style.RESET}][{len(notes)}]', end='')
+    return _id
+
 while True:
     log.debug('='*50)
     room = gremlins.room()
@@ -52,7 +59,7 @@ while True:
     # Query Sneknet for known, and remove known humans from the notes
     known = sneknet.query(notes_content)
     if True in known.values():
-        print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
+        print(f'[{fore.CYAN}  IMPOSTER  {style.RESET}]', end='')
         # Sneknet doesnt return a full dict and it FUCKS my shit
         vals = [known.get(k, False) for k in range(5)]
         _id = ids[vals.index(True)]
@@ -61,7 +68,7 @@ while True:
     else:
         if len(known) == 5:
             log.error(f'Zero length notes?!?!?! {notes=} {known=}')
-            _id = random.choice(ids)
+            _id = longest_id(notes)
 
         else:
             for i, v in known.items():
@@ -69,14 +76,12 @@ while True:
                 log.debug(f'Dropped known human from notes {ids[i]=}')
 
             if len(notes) == 1:
-                print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
+                print(f'[{fore.CYAN}  IMPOSTER  {style.RESET}]', end='')
                 _id = list(notes.keys())[0]
                 log.debug(f'Confirmed imposter from last note {_id=} "{notes[_id]}"')
 
             else:
-                print(f'[{fore.YELLOW} RANDOM {style.RESET}][{len(notes)}]', end='')
-                _id = random.choice(list(notes.keys()))
-                log.debug(f'Picking random from {len(notes)} options, {_id=}, {notes=}, "{notes[_id]}"')
+                _id = longest_id(notes)
 
     text = notes[_id]
 
