@@ -57,6 +57,10 @@ while True:
                 ids.remove(_id)
 
 
+    if not notes:
+        # This is very odd, not sure how to handle this
+        continue
+
     if imposter or len(notes) == 1:
         print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
         _id = ids[imposter] if imposter else ids[0]
@@ -64,10 +68,6 @@ while True:
     else:
         print(f'[{fore.YELLOW} RANDOM {style.RESET}][{len(notes)}]', end='')
         _id = random.choice(ids)
-
-    if not notes:
-        # This is very odd, not sure how to handle this
-        continue
 
     is_correct = gremlins.submit_guess(_id, csrf)
 
