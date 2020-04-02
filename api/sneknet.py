@@ -27,5 +27,5 @@ class Sneknet(Session):
         return list(r.json()['seen'].values())[0]['seen']
 
     def query(self, messages: List[str]) -> dict:
-        r = self.post('/query', json={"options": [m for m in messages]})
+        r = self.post('/query', json={"options": messages})
         return {d['i']: d['correct'] for d in r.json()['answers']}
