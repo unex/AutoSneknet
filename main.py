@@ -21,6 +21,7 @@ SNEKNET_TOKEN = os.environ.get("SNEKNET_TOKEN", None)
 re_csrf = re.compile(r"<gremlin-app\n\s*csrf=\"(.*)\"")
 re_notes_ids = re.compile(r"<gremlin-note id=\"(.*)\"")
 re_notes = re.compile(r"<gremlin-note id=\".*\">\n\s*(.*)")
+re_plswait = re.compile(r"<gremlin-prompt>\n.*<h1>(.*)</h1>\n.*<p>Please try again in a moment.</p>")
 
 sneknet = Sneknet(SNEKNET_TOKEN)
 gremlins = GremlinsAPI(REDDIT_TOKEN)
@@ -32,6 +33,12 @@ print(style.RESET)
 while True:
     log.debug('='*50)
     room = gremlins.room()
+
+    plswait = re_plswait.findall(room.text)
+    if plswait:
+        print(f'{plswait[0]}')
+        time.sleep(10)
+        continue
 
     csrf = re_csrf.findall(room.text)[0]
     ids = re_notes_ids.findall(room.text)
