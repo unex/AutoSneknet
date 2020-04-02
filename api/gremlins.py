@@ -1,5 +1,9 @@
 from requests import Session
 
+import logging
+
+log = logging.getLogger('AutoSneknet')
+
 class GremlinsAPI(Session):
     def __init__(self, api_key):
         super().__init__()
@@ -8,7 +12,11 @@ class GremlinsAPI(Session):
         self.cookies.set("reddit_session", api_key)
 
     def request(self, method, url, **kwargs):
-        return super().request(method, f'{self.API_BASE}{url}', **kwargs)
+        r = super().request(method, f'{self.API_BASE}{url}', **kwargs)
+
+        log.debug(f'[{self.__class__.__module__}.{self.__class__.__name__}] <{r.status_code}> {method=} {url=} {kwargs}')
+
+        return r
 
     def room(self):
         return self.get(f'/room')

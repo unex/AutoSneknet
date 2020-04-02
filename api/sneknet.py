@@ -2,6 +2,9 @@ from typing import List
 import requests
 from requests import Session
 
+import logging
+
+log = logging.getLogger('AutoSneknet')
 class SneknetAuthException(requests.exceptions.HTTPError):
     pass
 
@@ -14,9 +17,14 @@ class Sneknet(Session):
     def request(self, method, url, **kwargs):
         r = super().request(method, f'{self.API_BASE}{url}', **kwargs)
 
-        d = r.json()
-        if d.get('error'):
-            raise SneknetAuthException(d.get('error'))
+        log.debug(f'[{self.__class__.__module__}.{self.__class__.__name__}] <{r.status_code}> {method=} {url=} {kwargs}')
+
+        try:
+            d = r.json()
+            if d.get('error'):
+                raise SneknetAuthException(d.get('error'))
+        except:
+            logging.critical(f'[{self.__class__.__module__}.{self.__class__.__name__}] {url=} {r.text}')
 
         return r
 

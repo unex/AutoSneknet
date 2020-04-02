@@ -7,6 +7,7 @@ import random
 from colored import fore, back, style
 
 from api import GremlinsAPI, Sneknet
+from logger import log
 
 REDDIT_TOKEN = os.environ.get("REDDIT_TOKEN", None)
 if not REDDIT_TOKEN:
@@ -29,6 +30,7 @@ print('🐍  https://snakeroom.org/sneknet 🐍')
 print(style.RESET)
 
 while True:
+    log.debug('='*50)
     room = gremlins.room()
 
     csrf = re_csrf.findall(room.text)[0]
@@ -44,23 +46,27 @@ while True:
         # Sneknet doesnt return a full dict and it FUCKS my shit
         vals = [known.get(k, False) for k in range(5)]
         _id = ids[vals.index(True)]
+        log.debug(f'Confirmed imposter from Sneknet {known=} {_id=} "{notes[_id]}"')
 
     else:
         for i, v in known.items():
             del notes[ids[i]]
+            log.debug(f'Dropped known human from notes {ids[i]=}')
 
         if len(notes) == 1:
             print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
             _id = list(notes.keys())[0]
+            log.debug(f'Confirmed imposter from last note {_id=} "{notes[_id]}"')
 
         else:
             print(f'[{fore.YELLOW} RANDOM {style.RESET}][{len(notes)}]', end='')
             _id = random.choice(list(notes.keys()))
+            log.debug(f'Picking random from {len(notes)} options, {_id=}, {notes=}, "{notes[_id]}"')
 
     print(f'[ {text:110} ]', end='')
     is_correct = gremlins.submit_guess(_id, csrf)
 
-    text = notes[_id]
+    log.debug(f'{is_correct=}')
 
     options = [
         {
@@ -80,12 +86,7 @@ while True:
 
     print(f'[ {text:110} ]', end='')
 
-    if is_correct:
-        print(f'[{fore.LIGHT_GREEN} W {style.RESET}]', end='')
-    else:
-        print(f'[{fore.RED} L {style.RESET}]', end='')
-
-    seen = sneknet.submit(options)
+    log.debug(f'{seen=}')
 
     if seen:
         print(f'[{fore.CYAN}  SEEN  {style.RESET}]', end='')
@@ -95,10 +96,10 @@ while True:
     if (True in known.values() and not is_correct):
         print(back.RED + fore.BLACK)
         print(f'\n\nOOH SHIT THIS SHOULD NEVER HAPPEN\n\n')
-        print(f'{notes=}')
+        print(f'{notes_content=} {known=}')
         print('\n')
         print(f'{notes[_id]} WAS WRONG!!!!')
-        print(style.RESET + '\n\n')
+        print(style.RESET)
 
     print('')
 
