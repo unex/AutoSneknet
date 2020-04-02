@@ -89,7 +89,7 @@ while True:
         }
     ]
 
-    print(f'[ {text:100} ]', end='')
+    print(f'[ {text:110} ]', end='')
 
     if is_correct:
         print(f'[{fore.LIGHT_GREEN} W {style.RESET}]', end='')
