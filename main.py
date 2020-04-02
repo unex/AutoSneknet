@@ -56,6 +56,11 @@ while True:
         log.debug(f'Confirmed imposter from Sneknet {known=} {_id=} "{notes[_id]}"')
 
     else:
+        if len(known) == 5:
+            log.error(f'Zero length notes?!?!?! {notes=} {known=}')
+            _id = random.choice(ids)
+
+    else:
         for i, v in known.items():
             del notes[ids[i]]
             log.debug(f'Dropped known human from notes {ids[i]=}')
