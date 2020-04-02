@@ -11,7 +11,7 @@ class SneknetAuthException(requests.exceptions.HTTPError):
 class Sneknet(Session):
     def __init__(self, token):
         super().__init__()
-        self.headers.update({'Authorization': f'{token}'})
+        self.headers.update({'Authorization': f'{token}', 'User-Agent': 'AutoSneknet'})
         self.API_BASE = "https://api.snakeroom.org/y20"
 
     def request(self, method, url, **kwargs):
