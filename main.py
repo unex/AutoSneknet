@@ -63,20 +63,20 @@ while True:
             log.error(f'Zero length notes?!?!?! {notes=} {known=}')
             _id = random.choice(ids)
 
-    else:
-        for i, v in known.items():
-            del notes[ids[i]]
-            log.debug(f'Dropped known human from notes {ids[i]=}')
-
-        if len(notes) == 1:
-            print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
-            _id = list(notes.keys())[0]
-            log.debug(f'Confirmed imposter from last note {_id=} "{notes[_id]}"')
-
         else:
-            print(f'[{fore.YELLOW} RANDOM {style.RESET}][{len(notes)}]', end='')
-            _id = random.choice(list(notes.keys()))
-            log.debug(f'Picking random from {len(notes)} options, {_id=}, {notes=}, "{notes[_id]}"')
+            for i, v in known.items():
+                del notes[ids[i]]
+                log.debug(f'Dropped known human from notes {ids[i]=}')
+
+            if len(notes) == 1:
+                print(f'[{fore.CYAN} IMPOSTER  {style.RESET}]', end='')
+                _id = list(notes.keys())[0]
+                log.debug(f'Confirmed imposter from last note {_id=} "{notes[_id]}"')
+
+            else:
+                print(f'[{fore.YELLOW} RANDOM {style.RESET}][{len(notes)}]', end='')
+                _id = random.choice(list(notes.keys()))
+                log.debug(f'Picking random from {len(notes)} options, {_id=}, {notes=}, "{notes[_id]}"')
 
     text = notes[_id]
 
