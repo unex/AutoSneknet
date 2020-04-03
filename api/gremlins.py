@@ -24,16 +24,23 @@ class GremlinsAPI(Session):
     def room(self):
         return self.get(f'/room')
 
-    def submit_guess(self, _id, csrf) -> bool:
-        r = self.post(f'/submit_guess', data = {
-            "note_id": _id,
-            "csrf_token": csrf
-        })
-
+    def as_json(self, r):
         try:
             r.json()
         except:
             text = r.text.replace('\n', '')
             log.critical(f'[{self.__class__.__module__}.{self.__class__.__name__}] <{r.status_code}> submit_guess {text}')
 
-        return r.json()["result"] == "WIN"
+        return r.json()
+
+    def status(self):
+        r = self.get('/status')
+        return self.as_json(r)
+
+    def submit_guess(self, _id, csrf) -> bool:
+        r = self.post(f'/submit_guess', data = {
+            "note_id": _id,
+            "csrf_token": csrf
+        })
+
+        return self.as_json(r)["result"] == "WIN"
