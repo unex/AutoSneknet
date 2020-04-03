@@ -128,7 +128,7 @@ while True:
                 log.debug(f'Dropped known human from notes {ids[i]=}')
 
             if not notes:
-                log.warn('All 5 notes were confirmed human ¯\_(ツ)_/¯')
+                log.warning('All 5 notes were confirmed human ¯\_(ツ)_/¯')
                 continue
 
             if len(notes) == 1:
