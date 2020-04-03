@@ -49,13 +49,13 @@ def cool_algo_name(notes):
         log.debug(f'GPT2 {val} "{notes[_id]}" {datas=} {notes=}')
 
         if val >= .8:
-        print(f'[{fore.ORANGE_1} GPT {(val)*100:.0f}% {style.RESET}][{len(notes)}]', end='')
-        return _id
+            print(f'[{fore.ORANGE_1} GPT {(val)*100:.0f}% {style.RESET}][{len(notes)}]', end='')
+            return _id
 
-        longest = max(notes.values(), key=len)
-        _id = list(notes.keys())[list(notes.values()).index(longest)]
-        log.debug(f'Selected longest {longest}, {_id=} from {notes.values()=}')
-        print(f'[{fore.YELLOW} LONGEST {style.RESET}][{len(notes)}]', end='')
+    longest = max(notes.values(), key=len)
+    _id = list(notes.keys())[list(notes.values()).index(longest)]
+    log.debug(f'Selected longest {longest}, {_id=} from {notes.values()=}')
+    print(f'[{fore.YELLOW} LONGEST {style.RESET}][{len(notes)}]', end='')
 
     return _id
 
