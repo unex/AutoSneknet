@@ -61,7 +61,7 @@ def cool_algo_name(notes):
         log.debug(f'GPT2 {val} "{notes[_id]}" {datas=} {notes=}')
 
         if val >= .8:
-            print(f'[{fore.ORANGE_1} GPT {(val)*100:.0f}% {style.RESET}][{len(notes)}]', end='')
+            print(f'[{fore.ORANGE_1} GPT  {(val)*100:2.0f}% {style.RESET}][{len(notes)}]', end='')
             return _id
 
     longest = max(notes.values(), key=len)
