@@ -58,8 +58,10 @@ def cool_algo_name(notes):
 
     return _id
 
-win: int = 1
-lose: int = 1
+status = gremlins.status()
+
+games_played: int = status['games_played']
+games_won: int = status['games_won']
 
 while True:
     log.debug('='*50)
@@ -117,10 +119,11 @@ while True:
 
     if is_correct:
         print(f'[{fore.LIGHT_GREEN} W {style.RESET}]', end='')
-        win += 1
+        games_won += 1
     else:
         print(f'[{fore.RED} L {style.RESET}]', end='')
-        lose += 1
+
+    games_played += 1
 
 
     if len(notes) == 2:
@@ -163,7 +166,7 @@ while True:
     else:
         print(f'[{fore.MAGENTA} UNSEEN {style.RESET}]', end='')
 
-    print(f'[{(win/(win+lose))*100:.1f}%]', end='')
+    print(f'[{(games_won/games_played)*100:.1f}%]', end='')
 
     if (True in known.values() and not is_correct):
         print(f'[{back.RED}{fore.WHITE} WRONG {style.RESET}]', end='')
