@@ -44,3 +44,13 @@ class GremlinsAPI(Session):
         })
 
         return self.as_json(r)["result"] == "WIN"
+
+    @sleep_and_retry
+    @limits(calls=1, period=60) # 2 calls / second
+    def report(self, _id, csrf):
+        r = self.post('/report_note', data = {
+            "note_ids": _id,
+            "csrf_token": csrf
+        })
+
+        return self.as_json(r)

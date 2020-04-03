@@ -37,6 +37,11 @@ user = reddit.me()
 if not user:
     raise Exception(f'Could not fetch user, check your REDDIT_TOKEN')
 
+REPORT = False
+if '--report' in sys.argv:
+    print('Report exploit enabled')
+    REPORT = True
+
 try:
     from gpt2 import Roberta
     print("Initalizing GPT-2...", end='\r')
@@ -63,6 +68,9 @@ def cool_algo_name(notes):
         if val >= .8:
             print(f'[{fore.ORANGE_1} GPT  {(val)*100:2.0f}% {style.RESET}][{len(notes)}]', end='')
             return _id
+
+    if REPORT:
+        return None
 
     longest = max(notes.values(), key=len)
     _id = list(notes.keys())[list(notes.values()).index(longest)]
@@ -130,6 +138,12 @@ while True:
 
             else:
                 _id = cool_algo_name(notes)
+
+    if not _id:
+        print(f'[{fore.YELLOW}  REPORT  {style.RESET}][{len(notes)}]', end='\n')
+        gremlins.report(ids[0], csrf)
+        log.debug(f'Reported {ids[0]}, {ids=} from {notes.values()=}')
+        continue
 
     text = notes[_id]
 
