@@ -46,11 +46,12 @@ def cool_algo_name(notes):
         datas = {k: roberta.query(v)[0] for k, v in notes.items()}
         val = max(datas.values())
         _id = list(datas.keys())[list(datas.values()).index(val)]
-        print(f'[{fore.ORANGE_1} GPT {(val)*100:.0f}% {style.RESET}][{len(notes)}]', end='')
         log.debug(f'GPT2 {val} "{notes[_id]}" {datas=} {notes=}')
+
+        if val >= .8:
+        print(f'[{fore.ORANGE_1} GPT {(val)*100:.0f}% {style.RESET}][{len(notes)}]', end='')
         return _id
 
-    else:
         longest = max(notes.values(), key=len)
         _id = list(notes.keys())[list(notes.values()).index(longest)]
         log.debug(f'Selected longest {longest}, {_id=} from {notes.values()=}')
