@@ -70,8 +70,8 @@ while True:
 
     plswait = re_plswait.findall(room.text)
     if plswait:
-        for i in range(5):
-            print(f'{back.WHITE}{fore.BLACK}{plswait[0]}' + ('' if i % 2 == 0 else back.BLACK) + ' ' + style.RESET, end='\r')
+        for i in range(6):
+            print(f'{back.WHITE}{fore.BLACK}{plswait[0]}{back.BLACK if i % 2 == 0 else back.WHITE} {style.RESET}', end='\r')
             time.sleep(1)
         continue
 
