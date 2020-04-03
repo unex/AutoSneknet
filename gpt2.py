@@ -5,7 +5,7 @@ import torch
 
 # https://github.com/openai/gpt-2-output-dataset/blob/master/detector/server.py
 
-checkpoint = 'detector-large.pt'
+checkpoint = './detector-large.pt'
 
 class Roberta:
     def __init__(self):

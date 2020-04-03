@@ -9,10 +9,6 @@ from colored import fore, back, style
 from api import GremlinsAPI, Sneknet
 from logger import log
 
-try:
-    from gpt2 import Roberta
-except:
-    Roberta = None
 
 REDDIT_TOKEN = os.environ.get("REDDIT_TOKEN", None)
 if not REDDIT_TOKEN:
@@ -35,11 +31,14 @@ print(fore.GREEN_YELLOW)
 print('🐍  https://snakeroom.org/sneknet 🐍')
 print(style.RESET)
 
-roberta = None
-if Roberta is not None:
+
+try:
+    from gpt2 import Roberta
     print("Initalizing GPT-2...", end='\r')
     roberta = Roberta()
     print('GPT-2 Model Initialzed')
+except:
+    roberta = None
 
 
 def cool_algo_name(notes):
