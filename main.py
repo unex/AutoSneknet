@@ -67,7 +67,7 @@ def cool_algo_name(notes):
     longest = max(notes.values(), key=len)
     _id = list(notes.keys())[list(notes.values()).index(longest)]
     log.debug(f'Selected longest {longest}, {_id=} from {notes.values()=}')
-    print(f'[{fore.YELLOW} LONGEST {style.RESET}][{len(notes)}]', end='')
+    print(f'[{fore.YELLOW}   LONG   {style.RESET}][{len(notes)}]', end='')
 
     return _id
 
@@ -103,7 +103,7 @@ while True:
     # Query Sneknet for known, and remove known humans from the notes
     known = sneknet.query(notes_content)
     if True in known.values():
-        print(f'[{fore.CYAN}  IMPOSTER  {style.RESET}]', end='')
+        print(f'[{fore.CYAN} IMPOSTER {style.RESET}][{fore.GREEN_YELLOW}S{style.RESET}]', end='')
         # Sneknet doesnt return a full dict and it FUCKS my shit
         vals = [known.get(k, False) for k in range(5)]
         _id = ids[vals.index(True)]
@@ -124,7 +124,7 @@ while True:
                 continue
 
             if len(notes) == 1:
-                print(f'[{fore.CYAN}  IMPOSTER  {style.RESET}]', end='')
+                print(f'[{fore.CYAN} IMPOSTER {style.RESET}][D]', end='')
                 _id = list(notes.keys())[0]
                 log.debug(f'Confirmed imposter from last note {_id=} "{notes[_id]}"')
 
@@ -198,7 +198,7 @@ while True:
     print('')
 
     sys.stdout.write((
-            '              '
+            '               '
             f'[ {style.DIM}{user["name"]}{style.RESET} ]'
             f'[ {style.UNDERLINED}TOTAL{style.RESET}: {styled_percent(total_games_won/total_games_played)} ]'
             f'[ {style.UNDERLINED}SESSION{style.RESET}: {styled_percent(session_games_won/session_games_played)} ]'
