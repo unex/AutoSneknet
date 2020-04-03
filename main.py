@@ -41,7 +41,7 @@ try:
     from gpt2 import Roberta
     print("Initalizing GPT-2...", end='\r')
     roberta = Roberta()
-    print('GPT-2 Model Initialzed')
+    print('GPT-2 Model Initialized')
 except:
     roberta = None
 
