@@ -42,13 +42,16 @@ if '--report' in sys.argv:
     print('Report exploit enabled')
     REPORT = True
 
-try:
-    from gpt2 import Roberta
-    print("Initalizing GPT-2...", end='\r')
-    roberta = Roberta()
-    print('GPT-2 Model Initialized')
-except:
-    roberta = None
+
+roberta = None
+if '--gpt2' in sys.argv:
+    try:
+        from gpt2 import Roberta
+        print("Initalizing GPT-2...", end='\r')
+        roberta = Roberta()
+        print('GPT-2 Model Initialized')
+    except Exception as e:
+        print(f'Error Initializing GPT-2: {e}')
 
 def styled_percent(num):
     # idk what to make these values
