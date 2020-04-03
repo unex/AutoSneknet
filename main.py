@@ -6,7 +6,7 @@ import random
 
 from colored import fore, back, style
 
-from api import GremlinsAPI, Sneknet
+from api import GremlinsAPI, Sneknet, Reddit
 from logger import log
 
 
@@ -26,11 +26,16 @@ re_plswait = re.compile(r"<gremlin-prompt>\n.*<h1>(.*)</h1>\n.*<p>Please try aga
 
 sneknet = Sneknet(SNEKNET_TOKEN)
 gremlins = GremlinsAPI(REDDIT_TOKEN)
+reddit = Reddit(REDDIT_TOKEN)
 
 print(fore.GREEN_YELLOW)
 print('🐍  https://snakeroom.org/sneknet 🐍')
 print(style.RESET)
 
+user = reddit.me()
+
+if not user:
+    raise Exception(f'Could not fetch user, check your REDDIT_TOKEN')
 
 try:
     from gpt2 import Roberta
@@ -40,6 +45,13 @@ try:
 except:
     roberta = None
 
+def styled_percent(num):
+    # idk what to make these values
+    color = fore.RED
+    if num >= .75: color = fore.YELLOW
+    if num >= .9: color = fore.GREEN
+
+    return f'{color}{num*100:.1f}%{style.RESET}'
 
 def cool_algo_name(notes):
     if roberta:
@@ -61,8 +73,13 @@ def cool_algo_name(notes):
 
 status = gremlins.status()
 
-games_played: int = status['games_played']
-games_won: int = status['games_won']
+session_games_played: int = 0
+session_games_won: int = 0
+
+total_games_played: int = status['games_played']
+total_games_won: int = status['games_won']
+
+win_streak = 0
 
 while True:
     log.debug('='*50)
@@ -124,12 +141,15 @@ while True:
 
     if is_correct:
         print(f'[{fore.LIGHT_GREEN} W {style.RESET}]', end='')
-        games_won += 1
+        session_games_won += 1
+        total_games_won += 1
+        win_streak += 1
     else:
         print(f'[{fore.RED} L {style.RESET}]', end='')
+        win_streak = 0
 
-    games_played += 1
-
+    session_games_played += 1
+    total_games_played += 1
 
     if len(notes) == 2:
         log.debug(f'50% chance "{notes[_id]}" {is_correct=}')
@@ -171,10 +191,19 @@ while True:
     else:
         print(f'[{fore.MAGENTA} UNSEEN {style.RESET}]', end='')
 
-    print(f'[{(games_won/games_played)*100:.1f}%]', end='')
-
     if (True in known.values() and not is_correct):
         print(f'[{back.RED}{fore.WHITE} WRONG {style.RESET}]', end='')
         log.warning(f'IMPOSTER MISMATCH: "{notes[_id]}" {text=} {_id=} {known=} {notes=}')
 
     print('')
+
+    sys.stdout.write((
+            '              '
+            f'[ {style.DIM}{user["name"]}{style.RESET} ]'
+            f'[ {style.UNDERLINED}TOTAL{style.RESET}: {styled_percent(total_games_won/total_games_played)} ]'
+            f'[ {style.UNDERLINED}SESSION{style.RESET}: {styled_percent(session_games_won/session_games_played)} ]'
+            f'[ {style.UNDERLINED}STREAK{style.RESET}: {win_streak} ]'
+            f'[ {style.DIM}{session_games_played}{style.RESET} ]'
+            '\r'
+        ))
+    sys.stdout.flush()
